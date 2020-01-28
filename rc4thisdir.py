@@ -24,14 +24,16 @@ def rc4crypt(data, key):
 def recurcurrentdir(callback, startdir=None):
     if startdir==None: startdir=os.getcwd()
     for e in os.listdir(startdir):
-        if os.path.isdir(startdir+"/"+e):
-            recurcurrentdir(callback, startdir+"/"+e)
-        else:
-            callback(startdir+"/"+e)
+        if not e.startswith(".git"):
+            if os.path.isdir(startdir+"/"+e):
+                recurcurrentdir(callback, startdir+"/"+e)
+            else:
+                callback(startdir+"/"+e)
 
 
 def encryptfile(dstpath):
     if "rc4thisdir.py" in dstpath: return
+    if dstpath.startswith(".git"): return
     print "Encrypt:", dstpath
     f=open(dstpath,"rb")
     s=f.read()
