@@ -1,5 +1,6 @@
 import os
 import sys
+import md5
 
 print "Key:", sys.argv[1]
 
@@ -41,9 +42,12 @@ def encryptfile(dstpath):
     if s[0:12]=="ENC666ENC666":
         print "Already encrypted:", dstpath
         return
-    s=rc4crypt(s, sys.argv[1])
+    k=md5.new(sys.argv[1]+s).digest()
+    k+=rc4crypt(sys.argv[1],k)
+    s=rc4crypt(s, k)
+    keyenc=rc4crypt(k, sys.argv[1])
     f=open(dstpath,"wb")
-    f.write("ENC666ENC666"+s)
+    f.write("ENC666ENC666"+keyenc+"ENC666ENC666"+s)
     f.close()
 
 
