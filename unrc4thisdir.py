@@ -34,11 +34,14 @@ def decryptfile(dstpath):
     if "rc4thisdir.py" in dstpath: return
     print "Decrypt:", dstpath
     f=open(dstpath,"rb")
-    s=f.read()
+    s=f.read(12)
     f.close()
     if len(s)<12 or s[0:12]!="ENC666ENC666":
         print "Non encrypted file:", dstpath
         return
+    f=open(dstpath,"rb")
+    s=f.read()
+    f.close()
     s=rc4crypt(s[12:], sys.argv[1])
     f=open(dstpath,"wb")
     f.write(s)
